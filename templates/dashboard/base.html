@@ -47,6 +47,7 @@
                 height: 100vh;
                 z-index: 1050;
             }
+
             .sidebar.collapse:not(.show) {
                 display: none !important;
             }
@@ -59,7 +60,7 @@
         .table-responsive {
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
@@ -68,12 +69,16 @@
     <div class="d-flex">
         {% if request.user.is_authenticated %}
         <!-- Sidebar (Desktop & Mobile) -->
-        <div class="sidebar d-flex flex-column collapse d-lg-flex" id="sidebarMenu" style="width: 250px; position: sticky; top: 0; z-index: 1000;">
-            <div class="p-3 text-white d-flex align-items-center justify-content-between border-bottom border-secondary">
+        <div class="sidebar d-flex flex-column collapse d-lg-flex" id="sidebarMenu"
+            style="width: 250px; position: sticky; top: 0; z-index: 1000;">
+            <div
+                class="p-3 text-white d-flex align-items-center justify-content-between border-bottom border-secondary">
                 <h4 class="mb-0">Dugout Admin</h4>
                 <!-- Close Button (Mobile Only) -->
-                <button class="btn text-white d-lg-none p-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-label="Close">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <button class="btn text-white d-lg-none p-0" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#sidebarMenu" aria-label="Close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
@@ -83,7 +88,7 @@
             <a href="{% url 'menu:dashboard_item_create' %}">➕ Add Menu Item</a>
             <a href="{% url 'menu:dashboard_category_create' %}">➕ Add Category</a>
             <a href="{% url 'menu:menu' %}" target="_blank">👁️ View Live Menu</a>
-            <div class="p-3 mt-auto">
+            <div class="p-3 ">
                 <a href="{% url 'menu:dashboard_logout' %}" class="btn btn-danger w-100">Logout</a>
             </div>
         </div>
@@ -95,7 +100,9 @@
             <!-- Top Navbar -->
             <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom px-3 px-lg-4">
                 <div class="container-fluid">
-                    <button class="navbar-toggler me-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler me-2" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+                        aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <span class="navbar-brand mb-0 h1">Dashboard</span>

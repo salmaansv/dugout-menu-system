@@ -564,6 +564,7 @@
             {% endif %}
         </form>
 
+
         <!-- Category pills (horizontal scroll) -->
         <div class="cat-bar">
             <a href="?{% if search_query %}q={{ search_query }}{% endif %}"
@@ -746,14 +747,7 @@
 
     <!-- ══ SCRIPTS ═══════════════════════════════════════════════════ -->
     <script>
-        /* Live search — submit form on type after short delay */
-        let searchTimer;
-        document.getElementById('search-input').addEventListener('input', function () {
-            clearTimeout(searchTimer);
-            searchTimer = setTimeout(() => {
-                document.getElementById('search-form').submit();
-            }, 450);
-        });
+        /* Search now triggers only when Enter is pressed (default form behavior) */
 
         /* ── Category Drawer ── */
         function openCatDrawer() {

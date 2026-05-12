@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta name="description" content="Dugout Café — Browse our full menu of coffees, snacks and meals." />
+    <title>Dugout Café — Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ─── CSS Reset & Variables ─────────────────────────── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f7f7f7;
+            --surface: #ffffff;
+            --border: #e8e8e8;
+            --primary: #a66422;
+            --primary-light: #fdf0ef;
+            --text-main: #1a1a1a;
+            --text-sub: #6b6b6b;
+            --text-cat: #888888;
+            --card-radius: 14px;
+            --tag-veg: #27ae60;
+            --tag-nonveg: #a66422;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        /* ─── Header ────────────────────────────────────────── */
+        .header {
+            background: var(--surface);
+            padding: 14px 18px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 0 var(--border);
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .brand-logo {
+            width: 46px;
+            height: 46px;
+            border-radius: 10px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #fff;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .brand-name {
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-sub {
+            font-size: 12px;
+            color: var(--text-sub);
+        }
+
+        /* ─── Search Bar ─────────────────────────────────────── */
+        .search-wrap {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-sub);
+            pointer-events: none;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 10px 12px 10px 38px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        #search-input:focus {
+            border-color: var(--primary);
+        }
+
+        #search-input::placeholder {
+            color: #b0b0b0;
+        }
+
+        /* ─── Category Pill Bar ──────────────────────────────── */
+        .cat-bar {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            scrollbar-width: none;
+        }
+
+        .cat-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-pill {
+            flex-shrink: 0;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            color: var(--text-sub);
+            transition: all 0.18s ease;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .cat-pill:hover,
+        .cat-pill.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+
+        /* ─── Main Content ───────────────────────────────────── */
+        .main {
+            padding: 16px 14px 80px;
+        }
+
+        /* ─── Section Heading ────────────────────────────────── */
+        .section-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 20px 0 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid var(--primary);
+            display: inline-block;
+        }
+
+        /* ─── Item Grid ──────────────────────────────────────── */
+        .item-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* ─── Item Card ──────────────────────────────────────── */
+        .item-card {
+            background: var(--surface);
+            border-radius: var(--card-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.11);
+        }
+
+        .item-img {
+            width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+            display: block;
+        }
+
+        .img-placeholder {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: linear-gradient(135deg, #f0ece8, #e8e0d8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .item-body {
+            padding: 10px 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 13.5px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: var(--text-main);
+        }
+
+        .item-cat-label {
+            font-size: 11px;
+            color: var(--text-cat);
+        }
+
+        .item-desc {
+            font-size: 11.5px;
+            color: var(--text-sub);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .item-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 6px;
+        }
+
+        .item-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .item-price span {
+            font-size: 11px;
+            font-weight: 400;
+            color: var(--text-sub);
+        }
+
+        .btn-view {
+            padding: 5px 13px;
+            background: var(--surface);
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+            border-radius: 7px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.18s ease;
+        }
+
+        .btn-view:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        /* ─── Empty State ────────────────────────────────────── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-sub);
+        }
+
+        .empty-state .emoji {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .empty-state small {
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        /* ─── Item Detail Modal ──────────────────────────────── */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: 200;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-width: 520px;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 20px;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-img {
+            width: 100%;
+            border-radius: 12px;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            margin-bottom: 14px;
+        }
+
+        .modal-img-placeholder {
+            width: 100%;
+            border-radius: 12px;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #f0ece8, #e8e0d8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            margin-bottom: 14px;
+        }
+
+        .modal-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .modal-cat {
+            font-size: 12px;
+            color: var(--text-cat);
+            margin-bottom: 8px;
+        }
+
+        .modal-desc {
+            font-size: 14px;
+            color: var(--text-sub);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .modal-price {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: var(--border);
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-wrap {
+            position: relative;
+        }
+
+        /* ─── Floating Category Button ───────────────────────── */
+        .fab-cat {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-main);
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 26px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            z-index: 150;
+            transition: transform 0.2s ease;
+        }
+
+        .fab-cat:hover {
+            transform: translateX(-50%) scale(1.04);
+        }
+
+        /* ─── Category Drawer ────────────────────────────────── */
+        .cat-drawer-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 200;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .cat-drawer-backdrop.open {
+            display: flex;
+        }
+
+        .cat-drawer {
+            background: var(--surface);
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            max-width: 520px;
+            padding: 16px;
+            animation: slideUp 0.28s ease;
+        }
+
+        .cat-drawer-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .cat-drawer-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            text-align: center;
+        }
+
+        .cat-drawer-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 55vh;
+            overflow-y: auto;
+        }
+
+        .cat-drawer-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1.5px solid var(--border);
+            transition: all 0.18s ease;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .cat-drawer-item:hover,
+        .cat-drawer-item.active {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .cat-drawer-item .count {
+            font-size: 12px;
+            color: var(--text-sub);
+            background: var(--bg);
+            border-radius: 20px;
+            padding: 2px 10px;
+        }
+
+        .cat-drawer-item.active .count {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .cat-all-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        /* ─── Responsive ─────────────────────────────────────── */
+        @media (min-width: 500px) {
+            .item-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ══ HEADER ══════════════════════════════════════════════════ -->
+    <header class="header">
+        <div class="brand-row">
+            <img src="{% static 'image/logo-dugout.jpg' %}" height="40px; width=40px">
+            <div>
+                <div class="brand-name">Dugout Cafe</div>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <form method="get" action="" id="search-form" class="search-wrap">
+            <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="search" id="search-input" name="q" placeholder="Search your item here…"
+                value="{{ search_query }}" autocomplete="off" />
+            {% if active_category %}
+            <input type="hidden" name="category" value="{{ active_category }}" />
+            {% endif %}
+        </form>
+
+        <!-- Category pills (horizontal scroll) -->
+        <div class="cat-bar">
+            <a href="?{% if search_query %}q={{ search_query }}{% endif %}"
+                class="cat-pill {% if not active_category %}active{% endif %}">All</a>
+            {% for cat in categories %}
+            <a href="?{% if search_query %}q={{ search_query }}&{% endif %}category={{ cat.id }}"
+                class="cat-pill {% if active_category == cat.id|stringformat:'s' %}active{% endif %}">
+                {{ cat.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </header>
+
+    <!-- ══ MAIN ═════════════════════════════════════════════════════ -->
+    <main class="main">
+
+        {% if items %}
+        {% if active_category %}
+        <!-- Filtered by category: show flat grid with heading -->
+        {% for cat in categories %}
+        {% if cat.id|stringformat:'s' == active_category %}
+        <div class="section-heading">{{ cat.name }}</div>
+        {% endif %}
+        {% endfor %}
+        <div class="item-grid">
+            {% for item in items %}
+            <div class="item-card" onclick="openModal(
+                        '{{ item.name|escapejs }}',
+                        '{{ item.category.name|escapejs }}',
+                        '{{ item.description|escapejs }}',
+                        '{{ item.price }}',
+                        '{% if item.image %}{{ item.image.url }}{% endif %}'
+                    )">
+                {% if item.image %}
+                <img class="item-img" src="{{ item.image.url }}" alt="{{ item.name }}" loading="lazy" />
+                {% else %}
+                <div class="img-placeholder">☕</div>
+                {% endif %}
+                <div class="item-body">
+                    <div class="item-name">{{ item.name }}</div>
+                    <div class="item-cat-label">{{ item.category.name }}</div>
+                    {% if item.description %}
+                    <div class="item-desc">{{ item.description }}</div>
+                    {% endif %}
+                    <div class="item-footer">
+                        <div class="item-price">₹{{ item.price }}</div>
+                        <button class="btn-view">View</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% elif search_query %}
+        <!-- Search results: flat grid -->
+        <div class="section-heading">Results for "{{ search_query }}"</div>
+        <div class="item-grid">
+            {% for item in items %}
+            <div class="item-card" onclick="openModal(
+                        '{{ item.name|escapejs }}',
+                        '{{ item.category.name|escapejs }}',
+                        '{{ item.description|escapejs }}',
+                        '{{ item.price }}',
+                        '{% if item.image %}{{ item.image.url }}{% endif %}'
+                    )">
+                {% if item.image %}
+                <img class="item-img" src="{{ item.image.url }}" alt="{{ item.name }}" loading="lazy" />
+                {% else %}
+                <div class="img-placeholder">☕</div>
+                {% endif %}
+                <div class="item-body">
+                    <div class="item-name">{{ item.name }}</div>
+                    <div class="item-cat-label">{{ item.category.name }}</div>
+                    {% if item.description %}
+                    <div class="item-desc">{{ item.description }}</div>
+                    {% endif %}
+                    <div class="item-footer">
+                        <div class="item-price">₹{{ item.price }}</div>
+                        <button class="btn-view">View</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% else %}
+        <!-- All items: grouped by category -->
+        {% for cat in categories %}
+        {% with cat_items=items|dictsort:"category.name" %}
+        {% endwith %}
+        {% endfor %}
+
+        {% regroup items by category as grouped_items %}
+        {% for group in grouped_items %}
+        <div class="section-heading">{{ group.grouper.name }}</div>
+        <div class="item-grid">
+            {% for item in group.list %}
+            <div class="item-card" onclick="openModal(
+                            '{{ item.name|escapejs }}',
+                            '{{ item.category.name|escapejs }}',
+                            '{{ item.description|escapejs }}',
+                            '{{ item.price }}',
+                            '{% if item.image %}{{ item.image.url }}{% endif %}'
+                        )">
+                {% if item.image %}
+                <img class="item-img" src="{{ item.image.url }}" alt="{{ item.name }}" loading="lazy" />
+                {% else %}
+                <div class="img-placeholder">☕</div>
+                {% endif %}
+                <div class="item-body">
+                    <div class="item-name">{{ item.name }}</div>
+                    <div class="item-cat-label">{{ item.category.name }}</div>
+                    {% if item.description %}
+                    <div class="item-desc">{{ item.description }}</div>
+                    {% endif %}
+                    <div class="item-footer">
+                        <div class="item-price">₹{{ item.price }}</div>
+                        <button class="btn-view">View</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+            <div class="emoji">🔍</div>
+            <p>No items found</p>
+            <small>Try a different search or category</small>
+        </div>
+        {% endif %}
+
+    </main>
+
+    <!-- ══ FLOATING CATEGORY BUTTON ═════════════════════════════════ -->
+    <button class="fab-cat" id="fab-cat-btn" onclick="openCatDrawer()">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 5h2v2H3V5zm4 0h14v2H7V5zM3 11h2v2H3v-2zm4 0h14v2H7v-2zM3 17h2v2H3v-2zm4 0h14v2H7v-2z" />
+        </svg>
+        Category
+    </button>
+
+    <!-- ══ CATEGORY DRAWER ═══════════════════════════════════════════ -->
+    <div class="cat-drawer-backdrop" id="cat-drawer-backdrop" onclick="closeCatDrawer(event)">
+        <div class="cat-drawer">
+            <div class="cat-drawer-handle"></div>
+            <div class="cat-drawer-title">Browse by Category</div>
+            <ul class="cat-drawer-list">
+                {% for cat in categories %}
+                <li>
+                    <a href="?{% if search_query %}q={{ search_query }}&{% endif %}category={{ cat.id }}"
+                        class="cat-drawer-item {% if active_category == cat.id|stringformat:'s' %}active{% endif %}"
+                        onclick="closeCatDrawer()">
+                        {{ cat.name }}
+                        <span class="count">{{ cat.items.count }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            <a href="?{% if search_query %}q={{ search_query }}{% endif %}" class="cat-all-btn"
+                onclick="closeCatDrawer()">
+                Show All Items
+            </a>
+        </div>
+    </div>
+
+    <!-- ══ ITEM DETAIL MODAL ═════════════════════════════════════════ -->
+    <div class="modal-backdrop" id="modal-backdrop" onclick="closeModal(event)">
+        <div class="modal modal-wrap">
+            <button class="modal-close" onclick="closeModal(null, true)">✕</button>
+            <div id="modal-img-wrap"></div>
+            <div class="modal-name" id="modal-name"></div>
+            <div class="modal-cat" id="modal-cat"></div>
+            <div class="modal-desc" id="modal-desc"></div>
+            <div class="modal-price" id="modal-price"></div>
+        </div>
+    </div>
+
+    <!-- ══ SCRIPTS ═══════════════════════════════════════════════════ -->
+    <script>
+        /* Live search — submit form on type after short delay */
+        let searchTimer;
+        document.getElementById('search-input').addEventListener('input', function () {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                document.getElementById('search-form').submit();
+            }, 450);
+        });
+
+        /* ── Category Drawer ── */
+        function openCatDrawer() {
+            document.getElementById('cat-drawer-backdrop').classList.add('open');
+        }
+
+        function closeCatDrawer(e) {
+            const backdrop = document.getElementById('cat-drawer-backdrop');
+            if (!e || e.target === backdrop) {
+                backdrop.classList.remove('open');
+            }
+        }
+
+        /* ── Item Detail Modal ── */
+        function openModal(name, cat, desc, price, imgUrl) {
+            document.getElementById('modal-name').textContent = name;
+            document.getElementById('modal-cat').textContent = cat;
+            document.getElementById('modal-desc').textContent = desc || 'No description available.';
+            document.getElementById('modal-price').textContent = '₹' + price;
+
+            const imgWrap = document.getElementById('modal-img-wrap');
+            if (imgUrl) {
+                imgWrap.innerHTML = `<img class="modal-img" src="${imgUrl}" alt="${name}" />`;
+            } else {
+                imgWrap.innerHTML = `<div class="modal-img-placeholder">☕</div>`;
+            }
+
+            document.getElementById('modal-backdrop').classList.add('open');
+        }
+
+        function closeModal(e, force) {
+            const backdrop = document.getElementById('modal-backdrop');
+            if (force || (e && e.target === backdrop)) {
+                backdrop.classList.remove('open');
+            }
+        }
+
+        /* Close modal/drawer on Escape */
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                document.getElementById('modal-backdrop').classList.remove('open');
+                document.getElementById('cat-drawer-backdrop').classList.remove('open');
+            }
+        });
+    </script>
+
+</body>
+
+</html>

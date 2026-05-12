@@ -1,0 +1,20 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Confirm Delete{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm mx-auto border-danger" style="max-width: 500px;">
+    <div class="card-header bg-danger text-white">
+        <h5 class="mb-0">Confirm Delete</h5>
+    </div>
+    <div class="card-body text-center py-4">
+        <p class="mb-4">Are you sure you want to delete <strong>"{{ obj.name }}"</strong>?</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <a href="{% url 'menu:dashboard_home' %}" class="btn btn-outline-secondary me-2">Cancel</a>
+            <button type="submit" class="btn btn-danger">Yes, Delete It</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

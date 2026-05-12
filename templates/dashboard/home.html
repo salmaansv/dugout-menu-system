@@ -1,0 +1,83 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Menu Dashboard</h2>
+    <div>
+        <a href="{% url 'menu:dashboard_category_create' %}" class="btn btn-outline-primary">Add Category</a>
+        <a href="{% url 'menu:dashboard_item_create' %}" class="btn btn-primary">Add Menu Item</a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Categories List -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Categories</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for category in categories %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ category.name }}
+                        <div>
+                            <a href="{% url 'menu:dashboard_category_update' category.id %}" class="btn btn-sm btn-outline-secondary me-1">Edit</a>
+                            <a href="{% url 'menu:dashboard_category_delete' category.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No categories found.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Menu Items Table -->
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Menu Items</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td>
+                                    {% if item.image %}
+                                        <img src="{{ item.image.url }}" alt="{{ item.name }}" width="40" height="40" class="rounded object-fit-cover">
+                                    {% else %}
+                                        <div class="bg-secondary text-white rounded d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; font-size: 10px;">No Img</div>
+                                    {% endif %}
+                                </td>
+                                <td><strong>{{ item.name }}</strong></td>
+                                <td><span class="badge bg-secondary">{{ item.category.name }}</span></td>
+                                <td>₹{{ item.price }}</td>
+                                <td class="text-end">
+                                    <a href="{% url 'menu:dashboard_item_update' item.id %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                    <a href="{% url 'menu:dashboard_item_delete' item.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">No menu items found.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -15,25 +15,51 @@
         .sidebar {
             min-height: 100vh;
             background-color: #343a40;
+            transition: all 0.3s ease;
         }
 
         .sidebar a {
-            color: #fff;
+            color: #adb5bd;
             text-decoration: none;
-            padding: 10px 15px;
+            padding: 12px 20px;
             display: block;
+            font-size: 0.95rem;
+            transition: all 0.2s;
         }
 
         .sidebar a:hover {
             background-color: #495057;
+            color: #fff;
         }
 
-        .navbar-brand {
-            font-weight: bold;
+        .sidebar .active {
+            background-color: #495057;
+            color: #fff;
+        }
+
+        /* Mobile specific styles */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                position: fixed !important;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                height: 100vh;
+                z-index: 1050;
+            }
+            .sidebar.collapse:not(.show) {
+                display: none !important;
+            }
         }
 
         .content {
             padding: 20px;
+        }
+
+        .table-responsive {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
     </style>
 </head>
@@ -41,28 +67,42 @@
 <body>
     <div class="d-flex">
         {% if request.user.is_authenticated %}
-        <!-- Sidebar -->
-        <div class="sidebar d-flex flex-column" style="width: 250px;">
-            <div class="p-3 text-white text-center border-bottom border-secondary">
-                <h4>Dugout Admin</h4>
+        <!-- Sidebar (Desktop & Mobile) -->
+        <div class="sidebar d-flex flex-column collapse d-lg-flex" id="sidebarMenu" style="width: 250px; position: sticky; top: 0; z-index: 1000;">
+            <div class="p-3 text-white d-flex align-items-center justify-content-between border-bottom border-secondary">
+                <h4 class="mb-0">Dugout Admin</h4>
+                <!-- Close Button (Mobile Only) -->
+                <button class="btn text-white d-lg-none p-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-label="Close">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
             </div>
             <a href="{% url 'menu:dashboard_home' %}" class="mt-3">🏠 Dashboard Home</a>
             <a href="{% url 'menu:dashboard_item_create' %}">➕ Add Menu Item</a>
             <a href="{% url 'menu:dashboard_category_create' %}">➕ Add Category</a>
             <a href="{% url 'menu:menu' %}" target="_blank">👁️ View Live Menu</a>
-            <div class=" p-3">
+            <div class="p-3 mt-auto">
                 <a href="{% url 'menu:dashboard_logout' %}" class="btn btn-danger w-100">Logout</a>
             </div>
         </div>
         {% endif %}
 
         <!-- Main Content -->
-        <div class="flex-grow-1">
+        <div class="flex-grow-1" style="min-width: 0;">
             {% if request.user.is_authenticated %}
             <!-- Top Navbar -->
-            <nav class="navbar navbar-light bg-white border-bottom px-4">
-                <span class="navbar-brand mb-0 h1">Dashboard</span>
-                <span class="navbar-text">Logged in as {{ request.user.username }}</span>
+            <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom px-3 px-lg-4">
+                <div class="container-fluid">
+                    <button class="navbar-toggler me-2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <span class="navbar-brand mb-0 h1">Dashboard</span>
+                    <div class="ms-auto d-none d-sm-block">
+                        <span class="navbar-text">Logged in as <strong>{{ request.user.username }}</strong></span>
+                    </div>
+                </div>
             </nav>
             {% endif %}
 

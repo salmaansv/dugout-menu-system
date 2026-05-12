@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from django.views.generic import RedirectView
 from .import views
 
 app_name="menu"
@@ -32,5 +33,8 @@ urlpatterns = [
     path('dashboard/category/add/', views.dashboard_category_create, name='dashboard_category_create'),
     path('dashboard/category/<int:pk>/edit/', views.dashboard_category_update, name='dashboard_category_update'),
     path('dashboard/category/<int:pk>/delete/', views.dashboard_category_delete, name='dashboard_category_delete'),
+    
+    # Catch-all redirect for incorrect paths
+    path('<path:resource>', RedirectView.as_view(url='/', permanent=False)), 
 ]
 

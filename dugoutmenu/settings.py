@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-&312vf65mvg4%3v@tkj-lz&23p=$7k736y03qgj98sx7qic@5-
 DEBUG = True
 
 ALLOWED_HOSTS = ['dugout-menu-system-2.onrender.com', '.onrender.com', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://dugout-menu-system-2.onrender.com']
 
 
 # Application definition
